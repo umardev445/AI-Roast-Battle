@@ -1,0 +1,6 @@
+{
+  "name": "Roast Arena",
+  "description": "Generate hilarious AI-powered roasts for friends and fun conversations instantly.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
