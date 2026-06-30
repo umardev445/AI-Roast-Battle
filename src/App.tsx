@@ -133,50 +133,49 @@ export default function App() {
     } catch (_) {}
   };
 
-  // Fire server-side POST request to our API endpoint
+    // Generate roast locally only — no backend/API needed for GitHub Pages or Play Console
   const handleRequestRoast = async (request: RoastRequest) => {
     setIsLoading(true);
     setErrorMsg(null);
     setLastRequest(request);
 
-    // Optional: Auto-scroll down to the result arena while loading
     scrollToView(cardRef);
 
     try {
-      const response = await fetch("/api/roast", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request)
-      });
+      // Small delay to keep the loading animation feeling real
+      await new Promise((resolve) => setTimeout(resolve, 900));
 
-      if (!response.ok) {
-        throw new Error(`Server disarray: Status code ${response.status}`);
-      }
+      const fallbackRoast = getMockRoast(
+        request.name,
+        request.friendName,
+        request.style
+      );
 
-      const responsePayload: RoastResponse & { isFallback?: boolean } = await response.json();
-      setActiveRoast(responsePayload);
+      setActiveRoast({
+        ...fallbackRoast,
+        isFallback: true,
+      } as RoastResponse & { isFallback?: boolean });
 
-      // Scroll to visual card results
-      scrollToView(cardRef);
-    } catch (e: any) {
-
-      // Play Console reviewers must never see a broken screen if the backend/API is unavailable.
-      // If /api/roast returns 405/404 or the server is down, generate a safe offline roast locally.
-      console.error("API call error; using offline fallback:", e);
-      const fallbackRoast = getMockRoast(request.name, request.friendName, request.style);
-      setActiveRoast({ ...fallbackRoast, isFallback: true } as RoastResponse & { isFallback?: boolean });
       setErrorMsg(null);
       scrollToView(cardRef);
+    } catch (e) {
+      console.error("Local roast generation failed:", e);
 
-      console.error("API call error:", e);
-      setErrorMsg(e?.message || "Quantum connection severed. Please retry typing.");
+      // Last safety fallback so Play Console never sees broken functionality
+      setActiveRoast({
+        roast: `${request.name}, your WiFi signal has more confidence than your comeback game. Still, you survived the Roast Arena.`,
+        style: request.style,
+        intensity: "medium",
+        tags: ["offline", "safe", "fun"],
+        isFallback: true,
+      } as any);
+
+      setErrorMsg(null);
+      scrollToView(cardRef);
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleResetCard = () => {
     setActiveRoast(null);
     scrollToView(formRef);
