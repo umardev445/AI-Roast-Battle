@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RoastRequest, RoastResponse, SavedRoast, RoastStyle } from "./types";
-<<<<<<< HEAD
+
 import { getMockRoast } from "./data";
-=======
->>>>>>> cbd8f8cbe4608cd22d8faf6c6021fa9ed9974a74
+
+
 import Hero from "./components/Hero";
 import RoastForm from "./components/RoastForm";
 import RoastCard from "./components/RoastCard";
@@ -161,7 +161,7 @@ export default function App() {
       // Scroll to visual card results
       scrollToView(cardRef);
     } catch (e: any) {
-<<<<<<< HEAD
+
       // Play Console reviewers must never see a broken screen if the backend/API is unavailable.
       // If /api/roast returns 405/404 or the server is down, generate a safe offline roast locally.
       console.error("API call error; using offline fallback:", e);
@@ -169,10 +169,9 @@ export default function App() {
       setActiveRoast({ ...fallbackRoast, isFallback: true } as RoastResponse & { isFallback?: boolean });
       setErrorMsg(null);
       scrollToView(cardRef);
-=======
+
       console.error("API call error:", e);
       setErrorMsg(e?.message || "Quantum connection severed. Please retry typing.");
->>>>>>> cbd8f8cbe4608cd22d8faf6c6021fa9ed9974a74
     } finally {
       setIsLoading(false);
     }
